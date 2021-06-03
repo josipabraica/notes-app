@@ -16,7 +16,7 @@ import {
   ModalHeaderRightContent as HeaderRightContent,
   ModalBody as Body,
   Textarea
-} from "./styles";
+} from "./styled";
 import { useNotes } from "../../common/context/notesContext";
 
 interface Props {

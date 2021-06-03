@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 
-import { PreviewContent } from "./styles";
+import { PreviewContent } from "./styled";
 import { Card } from "../../common/components/card";
 import { useNotes } from "../../common/context/notesContext";
 import { Note } from "./types";

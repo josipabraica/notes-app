@@ -10,7 +10,6 @@ const Background = styled.div`
   bottom: 0;
   left: 0;
   z-index: 10002;
-  transition: opacity 400ms ease-in;
   display: flex;
   justify-content: center;
   align-items: center;

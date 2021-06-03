@@ -5,7 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import NotePreview from "./NotePreview";
 import NoteDetails from "./NoteDetails";
 
-import { Container, PlusIcon } from "./styles";
+import { Container, PlusIcon } from "./styled";
 import { Card } from "../../common/components/card";
 import { useNotes } from "../../common/context/notesContext";
 

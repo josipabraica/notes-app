@@ -1,4 +1,4 @@
-import { Background, Modal as StyledModal } from "./styles";
+import { Background, Modal as StyledModal } from "./styled";
 
 const Modal = ({ children }: { children: any }) => {
   return (
