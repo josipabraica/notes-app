@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import NotePreview from "./NotePreview";
 import NoteDetails from "./NoteDetails";
 
-import { Container, AddCard, PlusIcon } from "./styles";
+import { Container, PlusIcon } from "./styles";
+import { AddCard } from "../../common/components/card";
 import { useNotes } from "../../common/utilities/notes";
 
 const defaultContent = `This is a note
@@ -21,10 +22,9 @@ Shopping list:
 * toilet paper
 `;
 
-// TODO: sejvati u local storage u unmount ili u custom hooku?
 const NotesList = () => {
   console.log("LIST RERENDER");
-  const { add, getAllIds } = useNotes();
+  const { add, getAllIds, get } = useNotes();
   const [noteIdInPreview, setNodeIdInPreview] = useState<string | null>(null);
 
   const handleAddClick = () => {
@@ -33,9 +33,9 @@ const NotesList = () => {
     newNoteId && setNodeIdInPreview(newNoteId);
   };
 
-  const handlePreviewClick = (id: string) => {
+  const handlePreviewClick = useCallback((id: string) => {
     setNodeIdInPreview(id);
-  };
+  }, []);
 
   const handleClosePreview = () => {
     setNodeIdInPreview(null);
@@ -43,15 +43,25 @@ const NotesList = () => {
 
   const allNoteIds = getAllIds();
 
+  const renderNotes = () =>
+    allNoteIds.map(id => {
+      const note = get(id);
+
+      if (note) {
+        return (
+          <NotePreview key={id} note={note} handleClick={handlePreviewClick} />
+        );
+      }
+      return null;
+    });
+
   return (
     <Container>
       <AddCard onClick={handleAddClick}>
         <PlusIcon icon={faPlus} />
       </AddCard>
 
-      {allNoteIds.map(id => (
-        <NotePreview key={id} id={id} handleClick={handlePreviewClick} />
-      ))}
+      {renderNotes()}
 
       {noteIdInPreview && (
         <NoteDetails id={noteIdInPreview} handleClose={handleClosePreview} />

@@ -9,11 +9,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Modal } from "../../common/components/modal";
+import { Icon } from "../../common/components/icon";
 
 import {
   ModalHeader as Header,
   ModalHeaderRightContent as HeaderRightContent,
-  ModalHeaderIcon as Icon,
+  ModalBody as Body,
   Textarea
 } from "./styles";
 import { useNotes } from "../../common/utilities/notes";
@@ -51,29 +52,33 @@ const NoteDetails: FC<Props> = ({ id, handleClose }) => {
     setContent(event.target.value);
   };
 
+  const renderViewOrEditIcon = () =>
+    !isInEditMode ? (
+      <Icon icon={faPen} onClick={handleEditClick} />
+    ) : (
+      <Icon icon={faSave} onClick={handleSaveClick} />
+    );
+
+  const renderViewOrEditContent = () =>
+    !isInEditMode ? (
+      <ReactMarkdown>{content}</ReactMarkdown>
+    ) : (
+      <Textarea value={content} onChange={handleValueChange} />
+    );
+
   return (
     <Modal>
-      <>
-        <Header>
-          <Icon icon={faArrowLeft} onClick={handleClose} />
+      <Header>
+        <Icon icon={faArrowLeft} onClick={handleClose} />
 
-          <HeaderRightContent>
-            {!isInEditMode ? (
-              <Icon icon={faPen} onClick={handleEditClick} />
-            ) : (
-              <Icon icon={faSave} onClick={handleSaveClick} />
-            )}
+        <HeaderRightContent>
+          {renderViewOrEditIcon()}
 
-            <Icon icon={faTrash} onClick={handleDeleteClick} />
-          </HeaderRightContent>
-        </Header>
+          <Icon icon={faTrash} onClick={handleDeleteClick} />
+        </HeaderRightContent>
+      </Header>
 
-        {!isInEditMode ? (
-          <ReactMarkdown>{content}</ReactMarkdown>
-        ) : (
-          <Textarea value={content} onChange={handleValueChange} />
-        )}
-      </>
+      <Body isScrollable={!isInEditMode}>{renderViewOrEditContent()}</Body>
     </Modal>
   );
 };

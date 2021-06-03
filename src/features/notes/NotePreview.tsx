@@ -1,21 +1,23 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 
-import { Card, PreviewContent } from "./styles";
+import { PreviewContent } from "./styles";
+import { Card } from "../../common/components/card";
 import { useNotes } from "../../common/utilities/notes";
+import { Note } from "./types";
 
 interface Props {
-  id: string;
+  // id: string;
+  note: Note;
   handleClick: (id: string) => void;
 }
 
-// TODO: mozda koristiti usememo
-const NotePreview: FC<Props> = ({ id, handleClick }) => {
-  console.log("PREVIEW RERENDER", id);
-  const { get } = useNotes();
-  const note = get(id);
+const NotePreview: FC<Props> = ({ note, handleClick }) => {
+  console.log("PREVIEW RERENDER", note.id);
+  // const { get } = useNotes();
+  // const note = get(id);
 
   const onClick = () => {
-    handleClick(id);
+    handleClick(note.id);
   };
 
   if (note) {
@@ -29,4 +31,4 @@ const NotePreview: FC<Props> = ({ id, handleClick }) => {
   return null;
 };
 
-export default NotePreview;
+export default memo(NotePreview);
