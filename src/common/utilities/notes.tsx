@@ -4,22 +4,32 @@ import {
   useReducer,
   Dispatch,
   ReactNode,
-  useMemo
+  useMemo,
+  useCallback,
+  useEffect
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { Note } from "../../features/notes/types";
 import { getStateFromStorage, setStateToStorage } from "./storage";
+import { NOTES_STORAGE_KEY } from "../constants";
 
-const STORAGE_KEY = "@notes-app/notes";
+interface State {
+  byId: { [k: string]: Note };
+  allIds: string[];
+}
 
-const notesFromStorage = getStateFromStorage<Note[]>(STORAGE_KEY) || [];
+const notesFromStorage = getStateFromStorage<State>(NOTES_STORAGE_KEY) || {
+  byId: {},
+  allIds: []
+};
 
 const initialState: {
-  state: Note[];
+  state: State;
   dispatch: Dispatch<{
     type: string;
-    payload: Note[];
+    // payload: Note[];
+    payload: State;
   }>;
 } = {
   state: notesFromStorage,
@@ -31,16 +41,16 @@ const SAVE = "save";
 const ADD = "add";
 const DELETE = "delete";
 
-const reducer = (state: Note[], action: { type: string; payload?: Note[] }) => {
+const reducer = (state: State, action: { type: string; payload?: State }) => {
   switch (action.type) {
     case ADD: {
-      return action.payload || [];
+      return action.payload || state;
     }
     case SAVE: {
-      return action.payload || [];
+      return action.payload || state;
     }
     case DELETE: {
-      return action.payload || [];
+      return action.payload || state;
     }
     default: {
       return state;
@@ -50,6 +60,10 @@ const reducer = (state: Note[], action: { type: string; payload?: Note[] }) => {
 
 const NotesProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, notesFromStorage);
+
+  useEffect(() => {
+    setStateToStorage<State>(NOTES_STORAGE_KEY, state);
+  }, [state]);
 
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
@@ -69,50 +83,49 @@ const useNotes = () => {
 
   const { state, dispatch } = context;
 
-  // TODO: ovdje spremati u local storage, ali nisam sigurna hoce li upalit?
-  // useEffect(() => {
-  //   console.log("state changed");
-  // }, [state]);
-
-  const getAllIds: () => string[] = () => {
-    return state.map(note => note.id);
-  };
+  const getAllIds: () => string[] = useCallback(() => {
+    // return state.map(note => note.id);
+    return state.allIds;
+  }, [state.allIds]);
 
   const get: (id: string) => Note | undefined = id => {
-    return state.find(note => note.id === id);
+    // return state.find(note => note.id === id);
+    return state.byId[id];
   };
 
   const save: (id: string, source: string) => void = (id, source) => {
-    const newState = state.map(note => {
-      if (note.id === id) {
-        return {
-          ...note,
-          content: source
-        };
-      }
+    // const newState = state.map(note => {
+    //   if (note.id === id) {
+    //     return {
+    //       ...note,
+    //       content: source
+    //     };
+    //   }
 
-      return note;
+    //   return note;
+    // });
+    const newState: State = {
+      ...state,
+      byId: { ...state.byId, [id]: { ...state.byId[id], content: source } }
+    };
+
+    dispatch({
+      type: SAVE,
+      payload: newState
     });
-
-    try {
-      setStateToStorage<Note[]>(STORAGE_KEY, newState);
-
-      dispatch({
-        type: SAVE,
-        payload: newState
-      });
-    } catch (error) {}
   };
 
-  const add: (initialSource: string) => string | void = initialSource => {
-    const newNote = {
-      id: uuidv4(),
-      content: initialSource
-    };
-    const newState: Note[] = [...state, newNote];
-
-    try {
-      setStateToStorage<Note[]>(STORAGE_KEY, newState);
+  const add: (initialSource: string) => string | void = useCallback(
+    initialSource => {
+      const newNote = {
+        id: uuidv4(),
+        content: initialSource
+      };
+      // const newState: Note[] = [...state, newNote];
+      const newState: State = {
+        byId: { ...state.byId, [newNote.id]: newNote },
+        allIds: state.allIds.concat(newNote.id)
+      };
 
       dispatch({
         type: ADD,
@@ -120,20 +133,22 @@ const useNotes = () => {
       });
 
       return newNote.id;
-    } catch (error) {}
-  };
+    },
+    [dispatch, state.allIds, state.byId]
+  );
 
   const remove: (id: string) => void = id => {
-    const newState = state.filter(note => note.id !== id);
+    // const newState = state.filter(note => note.id !== id);
+    const newState: State = {
+      ...state,
+      allIds: state.allIds.filter(noteId => noteId !== id)
+    };
+    delete newState.byId[id];
 
-    try {
-      setStateToStorage<Note[]>(STORAGE_KEY, newState);
-
-      dispatch({
-        type: DELETE,
-        payload: newState
-      });
-    } catch (error) {}
+    dispatch({
+      type: DELETE,
+      payload: newState
+    });
   };
 
   return {
