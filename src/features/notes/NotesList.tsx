@@ -6,7 +6,7 @@ import NotePreview from "./NotePreview";
 import NoteDetails from "./NoteDetails";
 
 import { Container, PlusIcon } from "./styles";
-import { AddCard } from "../../common/components/card";
+import { Card } from "../../common/components/card";
 import { useNotes } from "../../common/context/notesContext";
 
 const defaultContent = `This is a note
@@ -57,9 +57,9 @@ const NotesList = () => {
 
   return (
     <Container>
-      <AddCard onClick={handleAddClick}>
+      <Card isForAdding={true} onClick={handleAddClick}>
         <PlusIcon icon={faPlus} />
-      </AddCard>
+      </Card>
 
       {renderNotes()}
 

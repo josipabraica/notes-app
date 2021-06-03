@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const Card = styled.div`
+const Card = styled.div<{ isForAdding?: boolean }>`
   height: 200px;
   width: 200px;
   border: 3px solid transparent;
@@ -15,14 +15,16 @@ const Card = styled.div`
     border-width: 3px;
     border-color: #b90445;
   }
+
+  ${props =>
+    props.isForAdding &&
+    css`
+      background-color: #b90445;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: none;
+    `}
 `;
 
-const AddCard = styled(Card)`
-  background-color: #b90445;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: none;
-`;
-
-export { Card, AddCard };
+export { Card };
