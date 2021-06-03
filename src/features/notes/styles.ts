@@ -14,15 +14,14 @@ const Container = styled.div`
 `;
 
 // TODO: odvojiti Card u common/components?
-// TODO: pomakne se content na hover
 const Card = styled.div`
   height: 200px;
   width: 200px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   border-radius: 10px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
-  padding: 20px 20px 20px 20px;
+  padding: 0px 20px;
 
   &:hover {
     cursor: pointer;
