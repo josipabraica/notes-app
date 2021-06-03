@@ -10,8 +10,9 @@ interface Props {
 
 // TODO: mozda koristiti usememo
 const NotePreview: FC<Props> = ({ id, handleClick }) => {
-  const notes = useNotes();
-  const note = notes.get(id);
+  console.log("PREVIEW RERENDER", id);
+  const { get } = useNotes();
+  const note = get(id);
 
   const onClick = () => {
     handleClick(id);

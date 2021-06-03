@@ -18,35 +18,27 @@ import {
 } from "./styles";
 import { useNotes } from "../../common/utilities/notes";
 
-const defaultContent = `
-  This is a note
-  ==============
-  
-  Subtitle
-  --------
-  
-
-  Shopping list:
-  * apples
-  * oranges
-  * toilet paper
-`;
-
 interface Props {
   id: string;
   handleClose: () => void;
 }
 
 const NoteDetails: FC<Props> = ({ id, handleClose }) => {
-  const [content, setContent] = useState(defaultContent);
+  console.log("DETAILS RERENDER", id);
+  const { get, save, remove } = useNotes();
+  const [content, setContent] = useState(() => {
+    const note = get(id);
+    return note?.content || "";
+  });
   const [isInEditMode, setIsInEditMode] = useState(false);
-  const { remove } = useNotes();
 
   const handleEditClick = () => {
     setIsInEditMode(true);
   };
 
   const handleSaveClick = () => {
+    save(id, content);
+
     setIsInEditMode(false);
   };
 

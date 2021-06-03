@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,46 +8,40 @@ import NoteDetails from "./NoteDetails";
 import { Container, AddCard, PlusIcon } from "./styles";
 import { useNotes } from "../../common/utilities/notes";
 
-const defaultContent = `
-  This is a note
-  ==============
+const defaultContent = `This is a note
+==============
 
-  Subtitle
-  --------
+Subtitle
+--------
 
 
-  Shopping list:
-  * apples
-  * oranges
-  * toilet paper
+Shopping list:
+* apples
+* oranges
+* toilet paper
 `;
 
 // TODO: sejvati u local storage u unmount ili u custom hooku?
 const NotesList = () => {
-  const notes = useNotes();
-  const [noteIdInPreview, setNodeIdInPreview] = useState<string | null>(
-    "1d4f2aaf-3aad-4589-9aa1-9ede38f7f00c"
-  );
+  console.log("LIST RERENDER");
+  const { add, getAllIds } = useNotes();
+  const [noteIdInPreview, setNodeIdInPreview] = useState<string | null>(null);
 
   const handleAddClick = () => {
-    notes.add(defaultContent);
+    const newNoteId = add(defaultContent);
 
-    // setnoteid(true);
+    newNoteId && setNodeIdInPreview(newNoteId);
   };
 
   const handlePreviewClick = (id: string) => {
-    console.log("CLICKED ", id);
+    setNodeIdInPreview(id);
   };
 
   const handleClosePreview = () => {
     setNodeIdInPreview(null);
   };
 
-  const allNoteIds = notes.getAllIds();
-
-  useEffect(() => {
-    console.log("CHANGED");
-  }, [allNoteIds]);
+  const allNoteIds = getAllIds();
 
   return (
     <Container>
