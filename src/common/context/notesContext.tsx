@@ -11,7 +11,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 import { Note } from "../../features/notes/types";
-import { getStateFromStorage, setStateToStorage } from "./storage";
+import { getStateFromStorage, setStateToStorage } from "../utilities/storage";
 import { NOTES_STORAGE_KEY } from "../constants";
 
 interface State {

@@ -17,7 +17,7 @@ import {
   ModalBody as Body,
   Textarea
 } from "./styles";
-import { useNotes } from "../../common/utilities/notes";
+import { useNotes } from "../../common/context/notesContext";
 
 interface Props {
   id: string;

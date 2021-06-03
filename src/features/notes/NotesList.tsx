@@ -7,7 +7,7 @@ import NoteDetails from "./NoteDetails";
 
 import { Container, PlusIcon } from "./styles";
 import { AddCard } from "../../common/components/card";
-import { useNotes } from "../../common/utilities/notes";
+import { useNotes } from "../../common/context/notesContext";
 
 const defaultContent = `This is a note
 ==============

@@ -5,7 +5,7 @@ import { StrictMode } from "react";
 import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
 
-import { NotesProvider } from "./common/utilities/notes";
+import { NotesProvider } from "./common/context/notesContext";
 
 import "./index.css";
 

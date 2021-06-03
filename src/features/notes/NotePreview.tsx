@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 
 import { PreviewContent } from "./styles";
 import { Card } from "../../common/components/card";
-import { useNotes } from "../../common/utilities/notes";
+import { useNotes } from "../../common/context/notesContext";
 import { Note } from "./types";
 
 interface Props {
