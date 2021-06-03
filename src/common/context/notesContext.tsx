@@ -12,24 +12,17 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Note } from "../../features/notes/types";
 import { getStateFromStorage, setStateToStorage } from "../utilities/storage";
-import { NOTES_STORAGE_KEY } from "../constants";
+import { NOTES_STORAGE_KEY, SAVE, ADD, DELETE } from "../constants";
 
-interface State {
-  byId: { [k: string]: Note };
-  allIds: string[];
-}
+type State = Note[];
 
-const notesFromStorage = getStateFromStorage<State>(NOTES_STORAGE_KEY) || {
-  byId: {},
-  allIds: []
-};
+const notesFromStorage = getStateFromStorage<State>(NOTES_STORAGE_KEY) || [];
 
 const initialState: {
   state: State;
   dispatch: Dispatch<{
     type: string;
-    // payload: Note[];
-    payload: State;
+    payload?: Note | string;
   }>;
 } = {
   state: notesFromStorage,
@@ -37,20 +30,41 @@ const initialState: {
 };
 const NotesContext = createContext(initialState);
 
-const SAVE = "save";
-const ADD = "add";
-const DELETE = "delete";
-
-const reducer = (state: State, action: { type: string; payload?: State }) => {
+const reducer = (
+  state: State,
+  action: { type: string; payload?: Note | string }
+) => {
   switch (action.type) {
     case ADD: {
-      return action.payload || state;
+      if (!action.payload || typeof action.payload === "string") {
+        return state;
+      }
+
+      const newState = [...state, action.payload];
+      return newState;
     }
     case SAVE: {
-      return action.payload || state;
+      if (!action.payload || typeof action.payload === "string") {
+        return state;
+      }
+
+      return state.map(note => {
+        if (note.id === (action.payload as Note).id) {
+          return {
+            ...note,
+            ...(action.payload as Note)
+          };
+        }
+
+        return note;
+      });
     }
     case DELETE: {
-      return action.payload || state;
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
+
+      return state.filter(note => note.id !== action.payload);
     }
     default: {
       return state;
@@ -74,7 +88,6 @@ const NotesProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// TODO: normalizirati state?
 const useNotes = () => {
   const context = useContext(NotesContext);
   if (context === undefined) {
@@ -83,71 +96,48 @@ const useNotes = () => {
 
   const { state, dispatch } = context;
 
-  const getAllIds: () => string[] = useCallback(() => {
-    // return state.map(note => note.id);
-    return state.allIds;
-  }, [state.allIds]);
+  const getAllIds: () => string[] = () => {
+    return state.map(note => note.id);
+  };
 
   const get: (id: string) => Note | undefined = id => {
-    // return state.find(note => note.id === id);
-    return state.byId[id];
+    return state.find(note => note.id === id);
   };
 
   const save: (id: string, source: string) => void = (id, source) => {
-    // const newState = state.map(note => {
-    //   if (note.id === id) {
-    //     return {
-    //       ...note,
-    //       content: source
-    //     };
-    //   }
+    const note = get(id);
 
-    //   return note;
-    // });
-    const newState: State = {
-      ...state,
-      byId: { ...state.byId, [id]: { ...state.byId[id], content: source } }
-    };
-
-    dispatch({
-      type: SAVE,
-      payload: newState
-    });
-  };
-
-  const add: (initialSource: string) => string | void = useCallback(
-    initialSource => {
-      const newNote = {
-        id: uuidv4(),
-        content: initialSource
-      };
-      // const newState: Note[] = [...state, newNote];
-      const newState: State = {
-        byId: { ...state.byId, [newNote.id]: newNote },
-        allIds: state.allIds.concat(newNote.id)
+    if (note) {
+      const payload: Note = {
+        ...note,
+        content: source
       };
 
       dispatch({
-        type: ADD,
-        payload: newState
+        type: SAVE,
+        payload
       });
+    }
+  };
 
-      return newNote.id;
-    },
-    [dispatch, state.allIds, state.byId]
-  );
-
-  const remove: (id: string) => void = id => {
-    // const newState = state.filter(note => note.id !== id);
-    const newState: State = {
-      ...state,
-      allIds: state.allIds.filter(noteId => noteId !== id)
+  const add: (initialSource: string) => string | void = initialSource => {
+    const payload = {
+      id: uuidv4(),
+      content: initialSource
     };
-    delete newState.byId[id];
 
     dispatch({
+      type: ADD,
+      payload
+    });
+
+    return payload.id;
+  };
+
+  const remove: (id: string) => void = id => {
+    dispatch({
       type: DELETE,
-      payload: newState
+      payload: id
     });
   };
 
