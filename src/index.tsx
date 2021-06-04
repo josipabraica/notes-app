@@ -7,8 +7,6 @@ import reportWebVitals from "./reportWebVitals";
 
 import { NotesProvider } from "./common/context/notesContext";
 
-import "./index.css";
-
 ReactDOM.render(
   <StrictMode>
     <NotesProvider>
