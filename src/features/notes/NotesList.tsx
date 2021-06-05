@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,23 +25,38 @@ Shopping list:
 const NotesList = () => {
   console.log("LIST RERENDER");
   const { add, getAllIds, get } = useNotes();
-  const [noteIdInPreview, setNodeIdInPreview] = useState<string | null>(null);
+  const [noteIdInModal, setNodeIdInModal] = useState<string | null>(null);
+  const [showNoteInModalInEditMode, setShowNoteInModalInEditMode] =
+    useState(false);
 
-  const handleAddClick = () => {
+  const handleAddClick = useCallback(() => {
     const newNoteId = add(defaultContent);
 
-    newNoteId && setNodeIdInPreview(newNoteId);
-  };
+    if (newNoteId) {
+      setNodeIdInModal(newNoteId);
+      setShowNoteInModalInEditMode(true);
+    }
+  }, [add]);
 
   const handlePreviewClick = useCallback((id: string) => {
-    setNodeIdInPreview(id);
+    setNodeIdInModal(id);
+    setShowNoteInModalInEditMode(false);
   }, []);
 
-  const handleClosePreview = () => {
-    setNodeIdInPreview(null);
-  };
+  const handleClosePreview = useCallback(() => {
+    setNodeIdInModal(null);
+  }, []);
 
-  const allNoteIds = getAllIds();
+  const allNoteIds = useMemo(() => getAllIds(), [getAllIds]);
+
+  const plusCard = useMemo(
+    () => (
+      <Card isForAdding={true} onClick={handleAddClick}>
+        <PlusIcon icon={faPlus} />
+      </Card>
+    ),
+    [handleAddClick]
+  );
 
   const renderNotes = () =>
     allNoteIds.map(id => {
@@ -57,14 +72,16 @@ const NotesList = () => {
 
   return (
     <Container>
-      <Card isForAdding={true} onClick={handleAddClick}>
-        <PlusIcon icon={faPlus} />
-      </Card>
+      {plusCard}
 
       {renderNotes()}
 
-      {noteIdInPreview && (
-        <NoteDetails id={noteIdInPreview} handleClose={handleClosePreview} />
+      {noteIdInModal && (
+        <NoteDetails
+          id={noteIdInModal}
+          isEditMode={showNoteInModalInEditMode}
+          handleClose={handleClosePreview}
+        />
       )}
     </Container>
   );
