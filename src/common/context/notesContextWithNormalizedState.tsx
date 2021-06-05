@@ -3,10 +3,10 @@ import {
   useContext,
   useReducer,
   Dispatch,
-  ReactNode,
   useMemo,
   useCallback,
-  useEffect
+  useEffect,
+  FC
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -86,7 +86,7 @@ const reducer = (
   }
 };
 
-const NotesProvider = ({ children }: { children: ReactNode }) => {
+const NotesProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, notesFromStorage);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const NotesProvider = ({ children }: { children: ReactNode }) => {
 const useNotes = () => {
   const context = useContext(NotesContext);
   if (context === undefined) {
-    throw new Error("useNotes must be used withing a NotesProvider!");
+    throw new Error("useNotes must be used within a NotesProvider!");
   }
 
   const { state, dispatch } = context;
@@ -148,12 +148,15 @@ const useNotes = () => {
     [dispatch]
   );
 
-  const remove: (id: string) => void = id => {
-    dispatch({
-      type: DELETE,
-      payload: id
-    });
-  };
+  const remove: (id: string) => void = useCallback(
+    id => {
+      dispatch({
+        type: DELETE,
+        payload: id
+      });
+    },
+    [dispatch]
+  );
 
   return {
     getAllIds,

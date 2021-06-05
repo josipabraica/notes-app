@@ -6,8 +6,6 @@ const Container = styled.div`
   padding: 100px;
   display: grid;
   grid-template-columns: repeat(5, 200px);
-  /* grid-gap: 60px; */
-  /* justify-content: center; */
   justify-content: space-between;
   grid-row-gap: 30px;
 `;
@@ -20,7 +18,6 @@ const PlusIcon = styled(FontAwesomeIcon)`
 const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  /* margin-bottom: 20px; */
   height: 60px;
 `;
 

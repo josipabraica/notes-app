@@ -21,13 +21,12 @@ import { useNotes } from "../../common/context/notesContext";
 interface Props {
   id: string;
   isEditMode: boolean;
-  handleClose: () => void;
+  onClose: () => void;
 }
 
-const NoteDetails: FC<Props> = ({ id, isEditMode, handleClose }) => {
-  console.log("DETAILS RERENDER", id);
+const NoteDetails: FC<Props> = ({ id, isEditMode, onClose }) => {
   const { get, save, remove } = useNotes();
-  const [content, setContent] = useState(() => {
+  const [noteContent, setNoteContent] = useState(() => {
     const note = get(id);
     return note?.content || "";
   });
@@ -38,24 +37,25 @@ const NoteDetails: FC<Props> = ({ id, isEditMode, handleClose }) => {
   };
 
   const handleSaveClick = () => {
-    save(id, content);
+    save(id, noteContent);
 
     setIsInEditMode(false);
   };
 
   const handleDeleteClick = useCallback(() => {
     remove(id);
-    handleClose();
-  }, [handleClose, id, remove]);
+
+    onClose();
+  }, [onClose, id, remove]);
 
   const handleValueChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(event.target.value);
+    setNoteContent(event.target.value);
   };
 
   return (
     <Modal>
       <Header>
-        <Icon icon={faArrowLeft} onClick={handleClose} />
+        <Icon icon={faArrowLeft} onClick={onClose} />
 
         <HeaderRightContent>
           {!isInEditMode ? (
@@ -70,9 +70,9 @@ const NoteDetails: FC<Props> = ({ id, isEditMode, handleClose }) => {
 
       <Body isScrollable={!isInEditMode}>
         {!isInEditMode ? (
-          <Markdown>{content}</Markdown>
+          <Markdown>{noteContent}</Markdown>
         ) : (
-          <Textarea value={content} onChange={handleValueChange} />
+          <Textarea value={noteContent} onChange={handleValueChange} />
         )}
       </Body>
     </Modal>

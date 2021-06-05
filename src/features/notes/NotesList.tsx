@@ -9,7 +9,7 @@ import { Container, PlusIcon } from "./styled";
 import { Card } from "../../common/components/card";
 import { useNotes } from "../../common/context/notesContext";
 
-const defaultContent = `This is a note
+const defaultNoteContent = `This is a note
 ==============
 
 Subtitle
@@ -23,14 +23,13 @@ Shopping list:
 `;
 
 const NotesList = () => {
-  console.log("LIST RERENDER");
   const { add, getAllIds, get } = useNotes();
   const [noteIdInModal, setNodeIdInModal] = useState<string | null>(null);
   const [showNoteInModalInEditMode, setShowNoteInModalInEditMode] =
     useState(false);
 
   const handleAddClick = useCallback(() => {
-    const newNoteId = add(defaultContent);
+    const newNoteId = add(defaultNoteContent);
 
     if (newNoteId) {
       setNodeIdInModal(newNoteId);
@@ -64,7 +63,7 @@ const NotesList = () => {
 
       if (note) {
         return (
-          <NotePreview key={id} note={note} handleClick={handlePreviewClick} />
+          <NotePreview key={id} note={note} onClick={handlePreviewClick} />
         );
       }
       return null;
@@ -80,7 +79,7 @@ const NotesList = () => {
         <NoteDetails
           id={noteIdInModal}
           isEditMode={showNoteInModalInEditMode}
-          handleClose={handleClosePreview}
+          onClose={handleClosePreview}
         />
       )}
     </Container>

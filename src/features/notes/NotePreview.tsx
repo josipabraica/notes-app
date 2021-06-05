@@ -6,18 +6,16 @@ import { Note } from "./types";
 
 interface Props {
   note: Note;
-  handleClick: (id: string) => void;
+  onClick: (id: string) => void;
 }
 
-const NotePreview: FC<Props> = ({ note, handleClick }) => {
-  console.log("PREVIEW RERENDER", note.id);
-
-  const onClick = () => {
-    handleClick(note.id);
+const NotePreview: FC<Props> = ({ note, onClick }) => {
+  const handleClick = () => {
+    onClick(note.id);
   };
 
   return (
-    <Card onClick={onClick}>
+    <Card onClick={handleClick}>
       <Markdown isPreview={true}>{note.content}</Markdown>
     </Card>
   );

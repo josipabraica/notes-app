@@ -1,6 +1,8 @@
+import { FC } from "react";
+
 import { Background, Modal as StyledModal } from "./styled";
 
-const Modal = ({ children }: { children: any }) => {
+const Modal: FC = ({ children }) => {
   return (
     <Background>
       <StyledModal>{children}</StyledModal>

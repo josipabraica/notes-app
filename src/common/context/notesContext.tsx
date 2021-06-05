@@ -3,10 +3,10 @@ import {
   useContext,
   useReducer,
   Dispatch,
-  ReactNode,
   useMemo,
   useCallback,
-  useEffect
+  useEffect,
+  FC
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -72,7 +72,7 @@ const reducer = (
   }
 };
 
-const NotesProvider = ({ children }: { children: ReactNode }) => {
+const NotesProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, notesFromStorage);
 
   useEffect(() => {
