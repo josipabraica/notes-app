@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 import { Icon as StyledIcon } from "./styled";
@@ -12,4 +12,4 @@ const Icon: FC<Props> = ({ icon, onClick }) => (
   <StyledIcon icon={icon} onClick={onClick} />
 );
 
-export default Icon;
+export default memo(Icon);
