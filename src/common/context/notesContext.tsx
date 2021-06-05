@@ -91,14 +91,14 @@ const NotesProvider = ({ children }: { children: ReactNode }) => {
 const useNotes = () => {
   const context = useContext(NotesContext);
   if (context === undefined) {
-    throw new Error("useNotes must be used withing a NotesProvider!");
+    throw new Error("useNotes must be used within a NotesProvider!");
   }
 
   const { state, dispatch } = context;
 
-  const getAllIds: () => string[] = () => {
+  const getAllIds: () => string[] = useCallback(() => {
     return state.map(note => note.id);
-  };
+  }, [state]);
 
   const get: (id: string) => Note | undefined = id => {
     return state.find(note => note.id === id);
@@ -120,26 +120,32 @@ const useNotes = () => {
     }
   };
 
-  const add: (initialSource: string) => string | void = initialSource => {
-    const payload = {
-      id: uuidv4(),
-      content: initialSource
-    };
+  const add: (initialSource: string) => string | void = useCallback(
+    initialSource => {
+      const payload = {
+        id: uuidv4(),
+        content: initialSource
+      };
 
-    dispatch({
-      type: ADD,
-      payload
-    });
+      dispatch({
+        type: ADD,
+        payload
+      });
 
-    return payload.id;
-  };
+      return payload.id;
+    },
+    [dispatch]
+  );
 
-  const remove: (id: string) => void = id => {
-    dispatch({
-      type: DELETE,
-      payload: id
-    });
-  };
+  const remove: (id: string) => void = useCallback(
+    id => {
+      dispatch({
+        type: DELETE,
+        payload: id
+      });
+    },
+    [dispatch]
+  );
 
   return {
     getAllIds,
