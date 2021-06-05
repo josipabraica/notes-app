@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ReactMarkdown from "react-markdown";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -16,12 +15,6 @@ const Container = styled.div`
 const PlusIcon = styled(FontAwesomeIcon)`
   font-size: 32px;
   color: white;
-`;
-
-const PreviewContent = styled(ReactMarkdown)`
-  transform: scale(0.25);
-  transform-origin: top left;
-  width: 400%;
 `;
 
 const ModalHeader = styled.div`
@@ -42,20 +35,4 @@ const ModalBody = styled.div<{ isScrollable: boolean }>`
   height: inherit;
 `;
 
-const Textarea = styled.textarea`
-  width: 100%;
-  height: 100%;
-  border: none;
-  resize: none;
-  font-family: "Roboto";
-`;
-
-export {
-  Container,
-  PlusIcon,
-  PreviewContent,
-  ModalHeader,
-  ModalHeaderRightContent,
-  ModalBody,
-  Textarea
-};
+export { Container, PlusIcon, ModalHeader, ModalHeaderRightContent, ModalBody };
