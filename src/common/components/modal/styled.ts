@@ -16,8 +16,8 @@ const Background = styled.div`
 `;
 
 const Modal = styled.div`
-  width: 60%;
-  height: 80%;
+  width: 50%;
+  height: 90%;
   background-color: white;
   box-sizing: border-box;
   padding: 60px;
