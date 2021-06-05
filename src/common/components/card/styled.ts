@@ -9,6 +9,7 @@ const Card = styled.div<{ isForAdding?: boolean }>`
   box-sizing: border-box;
   padding: 0px 20px;
   overflow: hidden;
+  background-color: #fdfdfd;
 
   &:hover {
     cursor: pointer;
