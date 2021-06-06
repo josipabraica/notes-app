@@ -2,7 +2,7 @@ import ReactDOM from "react-dom";
 
 import { StrictMode } from "react";
 
-import App from "./app/App";
+import { App } from "./app";
 import reportWebVitals from "./reportWebVitals";
 
 import { NotesProvider } from "./common/context/notesContext";
