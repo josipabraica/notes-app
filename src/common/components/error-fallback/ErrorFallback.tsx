@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Message } from "./styled";
 
 interface Props {
-  error?: any;
+  error: Error;
 }
 
 const ErrorFallback: FC<Props> = ({ error }) => {
