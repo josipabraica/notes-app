@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const Card = styled.div<{ isForAdding?: boolean }>`
   height: 200px;
@@ -19,7 +19,7 @@ const Card = styled.div<{ isForAdding?: boolean }>`
 
   ${props =>
     props.isForAdding &&
-    css`
+    `
       background-color: #b90445;
       display: flex;
       justify-content: center;

@@ -1,10 +1,10 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 
 const Markdown = styled(ReactMarkdown)<{ isPreview?: boolean }>`
   ${props =>
     props.isPreview &&
-    css`
+    `
       transform: scale(0.25);
       transform-origin: top left;
       width: 400%;
